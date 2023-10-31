@@ -4,10 +4,6 @@ import ColorAddict.Enums.CardColor;
 
 public class Card {
 
-
-
-
-
     CardColor color;
     String text;
 

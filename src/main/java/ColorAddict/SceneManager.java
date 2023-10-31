@@ -1,67 +1,51 @@
 package ColorAddict;
 
+import ColorAddict.Scenes.CustomScene;
+import ColorAddict.Scenes.GameScene;
+import ColorAddict.Scenes.MenuScene;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+
 public class SceneManager {
-    private static final int MIN_PLAYERS = 2;
-    private static final int MAX_PLAYERS = 6;
-    private int numPlayers = MIN_PLAYERS;
+
+    public static SceneManager instance;
     private final Stage stage;
 
+    private HashMap<String, CustomScene> scenes = new HashMap<String, CustomScene>();
 
     public SceneManager(Stage stage){
         this.stage = stage;
+        if (instance == null)
+            instance = this;
+
+        scenes.put("MenuScene", new MenuScene());
+        scenes.put("GameScene", new GameScene());
+
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+
+        //Set app size to the screen size
+        stage.setX(screenSize.getMinX());
+        stage.setY(screenSize.getMinY());
+        stage.setWidth(screenSize.getWidth());
+        stage.setHeight(screenSize.getHeight());
+
+        stage.setTitle("Hello!");
+
     }
 
-    public void createMainMenu() {
-        VBox menu = new VBox(10);
-        menu.setPadding(new Insets(20));
-        menu.setAlignment(Pos.CENTER);
-        Label titleLabel = new Label("Color Addict Game");
-        titleLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
-        Label playersLabel = new Label("Number of Players:");
-        playersLabel.setStyle("-fx-font-size: 16px;");
-        HBox playersBox = new HBox(10);
-        playersBox.setAlignment(Pos.CENTER);
-
-        Label numPlayersLabel = new Label(Integer.toString(MIN_PLAYERS));
-        numPlayersLabel.setStyle("-fx-font-size: 16px;");
-
-        Button minusButton = new Button("-");
-        minusButton.setOnAction(e -> decreasePlayers(numPlayersLabel));
-
-        Button plusButton = new Button("+");
-        plusButton.setOnAction(e -> increasePlayers(numPlayersLabel));
-
-        playersBox.getChildren().addAll(minusButton, numPlayersLabel, plusButton);
-
-        Button startButton = new Button("Start Game");
-        menu.getChildren().addAll(titleLabel, playersLabel, playersBox, startButton);
-        Scene scene = new Scene(menu, 400, 400);
-        stage.setScene(scene);
+    public void changeScene(String sceneName) {
+        stage.hide();
+        stage.setScene(scenes.get(sceneName).getScene());
         stage.show();
     }
-
-    private void decreasePlayers(Label numPlayersLabel) {
-        if (numPlayers > MIN_PLAYERS) {
-            numPlayers--;
-            numPlayersLabel.setText(Integer.toString(numPlayers));
-        }
-    }
-    private void increasePlayers(Label numPlayersLabel) {
-        if (numPlayers < MAX_PLAYERS) {
-            numPlayers++;
-            numPlayersLabel.setText(Integer.toString(numPlayers));
-        }
-    }
-
-
-
 }
