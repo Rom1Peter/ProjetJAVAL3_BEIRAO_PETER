@@ -1,13 +1,8 @@
-package com.example.projet;
+package ColorAddict;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -19,7 +14,7 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
-        HeapManager heapManager = new HeapManager();
+        /*HeapManager heapManager = new HeapManager();
 
         CardManager cardManager = new CardManager();
         cardManager.CreateCards();
@@ -38,12 +33,18 @@ public class HelloApplication extends Application {
 
         Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
+
+        // Create grid pane which will contain all players
         GridPane grid = new GridPane();
+        grid.maxWidth(1450);
+        grid.maxHeight(1080);
+        grid.setMinSize(1450, 1080);
         grid.setHgap(10);
         grid.setVgap(10);
 
-        grid.add(joueur1, 0, 0);
-        grid.add(joueur2, 0, 1);
+        grid.add(joueur1, 0, 0, 1, 2);
+        grid.add(joueur2, 1, 0);
+
         grid.setGridLinesVisible(true);
 
         Scene scene = new Scene(grid);
@@ -56,8 +57,10 @@ public class HelloApplication extends Application {
 
         stage.setTitle("Hello!");
         stage.setScene(scene);
-        stage.show();
+        stage.show();*/
 
+        SceneManager sceneManager = new SceneManager(stage);
+        sceneManager.createMainMenu();
     }
 
     public static void main(String[] args) {

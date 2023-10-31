@@ -1,11 +1,6 @@
-package com.example.projet;
+package ColorAddict;
 
-import javafx.scene.Group;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-
-import java.io.File;
+import ColorAddict.Enums.CardColor;
 
 public class Card {
 

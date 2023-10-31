@@ -1,10 +1,8 @@
-package com.example.projet;
+package ColorAddict;
 
-import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -12,16 +10,23 @@ import java.util.ArrayList;
 
 public class Joueur extends Group {
 
-    public ArrayList<Card> hand = new ArrayList<Card>();
-    public ArrayList<Card> stack = new ArrayList<Card>();
-
-
     public static final String CARD_URL = "src/assets/UnoBlankCards.png";
     public static final String BG_URL = "src/assets/Background.png";
     private static final int START_X_POS = 0;
     private static final int START_Y_POS = 0;
     private static final int STEP_X = 100;
     private static final int STEP_Y = 50;
+
+    public ArrayList<Card> hand = new ArrayList<Card>();
+    public ArrayList<Card> stack = new ArrayList<Card>();
+
+    private int indexSelectedCard = 0;
+    private Group[] cards = new Group[3];
+
+    public Joueur() {
+        super();
+
+    }
 
 
     public void addCard(Card carte){
@@ -54,6 +59,7 @@ public class Joueur extends Group {
             Image image = new Image(new File(CARD_URL).toURI().toString());
             ImageView imageView = new ImageView(image);
 
+
             imageView.setFitHeight(100);
             imageView.setFitWidth(70);
             imageView.setX(posX);
@@ -68,14 +74,24 @@ public class Joueur extends Group {
 
             textUI.setFill(card.color.getColor());
 
-        /*// Center the text within the ImageView using a StackPane
-        StackPane.setAlignment(textUI, Pos.CENTER);
-        StackPane.setAlignment(imageView, Pos.CENTER);*/
+            Group cardGroup = new Group();
+            cardGroup.getChildren().addAll(imageView, textUI);
+            cards[main.indexOf(card)] = cardGroup;
 
-            this.getChildren().addAll(imageView, textUI);
+            this.getChildren().addAll(cardGroup);
             posX += STEP_X;
 
         }
+        SelectCard(0);
         System.out.println("Main du joueur : " + hand.toString());
+    }
+
+    public void SelectCard(int index){
+
+        if(cards[indexSelectedCard] != null){
+            cards[indexSelectedCard].setTranslateY(0);
+        }
+        indexSelectedCard = index;
+        cards[indexSelectedCard].setTranslateY(-20);
     }
 }

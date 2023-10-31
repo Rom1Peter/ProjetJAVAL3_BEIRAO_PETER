@@ -1,4 +1,4 @@
-package com.example.projet;
+package ColorAddict.Enums;
 
 import javafx.scene.paint.Paint;
 

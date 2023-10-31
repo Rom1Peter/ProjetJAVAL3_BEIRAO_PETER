@@ -3,6 +3,8 @@ module com.example.projet {
     requires javafx.fxml;
 
 
-    opens com.example.projet to javafx.fxml;
-    exports com.example.projet;
+    opens ColorAddict to javafx.fxml;
+    exports ColorAddict;
+    exports ColorAddict.Enums;
+    opens ColorAddict.Enums to javafx.fxml;
 }

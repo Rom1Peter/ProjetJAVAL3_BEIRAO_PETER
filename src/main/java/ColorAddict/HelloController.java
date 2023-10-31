@@ -1,4 +1,4 @@
-package com.example.projet;
+package ColorAddict;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

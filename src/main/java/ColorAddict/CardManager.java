@@ -1,8 +1,9 @@
-package com.example.projet;
+package ColorAddict;
+
+import ColorAddict.Enums.CardColor;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 
 public class CardManager {
     private final int NBCARDS_MAX = 42;

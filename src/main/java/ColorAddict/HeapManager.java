@@ -1,4 +1,4 @@
-package com.example.projet;
+package ColorAddict;
 
 public class HeapManager {
 
