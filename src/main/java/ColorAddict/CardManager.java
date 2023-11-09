@@ -21,17 +21,17 @@ public class CardManager {
 
         //Tant que pas assez de carte dans le paquet
         while(NBCARDS_MAX != nbCards){
-            System.out.println("On passe à la carte : " + nbCards);
+            //System.out.println("On passe à la carte : " + nbCards);
             //Pour chaque couleur
             for(CardColor color : CardColor.values()){
-                System.out.println("On passe à la couleur : " + color);
+                //System.out.println("On passe à la couleur : " + color);
 
                 //Tant que j'ai pas assez de carte de cette couleur
                 while (NBCARDS_MAX_PER_COLOR != nbCardsPerColor){
 
                     //Pour chaque text possible
                     for(CardColor text : CardColor.values()){
-                        System.out.println("On passe au text : " + text);
+                        //System.out.println("On passe au text : " + text);
                         //On ne met pas la carte si elle a la même couleur que le text
                         if(text.name() != color.name()) {
                             cards.add(CreateCard(color, text.toString()));
@@ -52,7 +52,7 @@ public class CardManager {
     }
 
     public Card CreateCard(CardColor color, String text){
-        System.out.println("Just create a card with the color : " + color + "and the text : " + text);
+        //System.out.println("Just create a card with the color : " + color + "and the text : " + text);
         return new Card(color, text);
     }
 
@@ -60,7 +60,7 @@ public class CardManager {
         return new Card(CardColor.BLACK, "Joker");
     }
 
-    public void GiveHandAndStack(ArrayList<Joueur> j){
+    public ArrayList<Joueur> GiveHandAndStack(ArrayList<Joueur> j){
 
         boolean isImpair = false;
         Card cardImpair = null;
@@ -92,7 +92,6 @@ public class CardManager {
         if(j.size() % 2 != 0){
             isImpair = true;
             cardImpair = PickCard();
-
         }
 
 
@@ -111,7 +110,7 @@ public class CardManager {
             joueur.SetPioche(stack);
         }
 
-
+        return j;
     }
 
     public Card PickCard(){

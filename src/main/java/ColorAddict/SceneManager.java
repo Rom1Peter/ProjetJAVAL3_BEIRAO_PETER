@@ -21,7 +21,11 @@ public class SceneManager {
     public static SceneManager instance;
     private final Stage stage;
 
+    //Dictionnaire de scene lié à leurs nom
     private HashMap<String, CustomScene> scenes = new HashMap<String, CustomScene>();
+
+    //Scene actuelle
+    private CustomScene currentScene;
 
     public SceneManager(Stage stage){
         this.stage = stage;
@@ -45,7 +49,22 @@ public class SceneManager {
 
     public void changeScene(String sceneName) {
         stage.hide();
-        stage.setScene(scenes.get(sceneName).getScene());
+
+        CustomScene newCustomScene = scenes.get(sceneName);
+
+        if(currentScene != null){
+            currentScene.OnSceneExit();
+
+        }
+
+        currentScene = newCustomScene;
+
+        currentScene.OnSceneEnter();
+
+        Scene newScene = scenes.get(sceneName).getScene();
+
+        stage.setScene(newScene);
         stage.show();
+
     }
 }

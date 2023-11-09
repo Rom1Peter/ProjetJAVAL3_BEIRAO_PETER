@@ -12,4 +12,9 @@ public abstract class CustomScene{
     public Scene getScene() {
         return this.scene;
     }
+
+    public abstract void OnSceneEnter();
+
+    public abstract void OnSceneExit();
+
 }

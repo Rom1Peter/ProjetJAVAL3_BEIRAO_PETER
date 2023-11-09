@@ -50,8 +50,8 @@ public class Joueur extends Group {
 
         Image bg = new Image(new File(BG_URL).toURI().toString());
         ImageView bgView = new ImageView(bg);
-        bgView.setFitHeight(300);
-        bgView.setFitWidth(600);
+        bgView.setFitHeight(250);
+        bgView.setFitWidth(450);
         this.getChildren().add(bgView);
         int posX = START_X_POS;
         int posY = START_Y_POS;

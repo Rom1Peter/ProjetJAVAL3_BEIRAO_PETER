@@ -14,10 +14,10 @@ public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
 
+
+
         SceneManager sceneManager = new SceneManager(stage);
         sceneManager.changeScene("MenuScene");
-
-
 
 
     }

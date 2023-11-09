@@ -1,5 +1,6 @@
 package ColorAddict.Scenes;
 
+import ColorAddict.GameManager;
 import ColorAddict.SceneManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -15,6 +16,7 @@ public class MenuScene extends CustomScene{
     private static final int MAX_PLAYERS = 6;
     private int numPlayers = MIN_PLAYERS;
 
+    private Label numPlayersLabel;
     public MenuScene() {
         VBox menu = new VBox(10);
         menu.setPadding(new Insets(20));
@@ -26,8 +28,8 @@ public class MenuScene extends CustomScene{
         HBox playersBox = new HBox(10);
         playersBox.setAlignment(Pos.CENTER);
 
-        Label numPlayersLabel = new Label(Integer.toString(MIN_PLAYERS));
-        numPlayersLabel.setStyle("-fx-font-size: 16px;");
+        this.numPlayersLabel = new Label(Integer.toString(MIN_PLAYERS));
+        this.numPlayersLabel.setStyle("-fx-font-size: 16px;");
 
         Button minusButton = new Button("-");
         minusButton.setOnAction(e -> decreasePlayers(numPlayersLabel));
@@ -61,5 +63,14 @@ public class MenuScene extends CustomScene{
 
     private void startGame() {
         SceneManager.instance.changeScene("GameScene");
+    }
+
+    public  void OnSceneEnter(){
+        System.out.println("Je rentre dans le Menu");
+    }
+
+    public  void OnSceneExit(){
+        System.out.println("Je sors du menu hello kitty avec la valeur nbplayers : " + this.numPlayersLabel.getText() + "");
+        GameManager.instance.nbJoueurs = Integer.valueOf(this.numPlayersLabel.getText());
     }
 }

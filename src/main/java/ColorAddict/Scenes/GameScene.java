@@ -1,6 +1,7 @@
 package ColorAddict.Scenes;
 
 import ColorAddict.CardManager;
+import ColorAddict.GameManager;
 import ColorAddict.HeapManager;
 import ColorAddict.Joueur;
 import javafx.geometry.Rectangle2D;
@@ -9,33 +10,32 @@ import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 
 
 public class GameScene extends CustomScene{
 
+    private GameManager gameManager;
+
+    private double width, height;
+
     public GameScene() {
 
-        HeapManager heapManager = new HeapManager();
+        this.gameManager = new GameManager();
+        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
 
-        CardManager cardManager = new CardManager();
-        cardManager.CreateCards();
+        //Set app size to the screen size
+        width = screenSize.getWidth();
+        height = screenSize.getHeight();
 
-        Joueur joueur1 = new Joueur();
-        Joueur joueur2 = new Joueur();
+        System.out.println("width : " + width + " height : " + height);
+    }
 
-        ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
-
-        joueurs.add(joueur1);
-        joueurs.add(joueur2);
-
-        cardManager.GiveHandAndStack(joueurs);
-
-        System.out.println("Heap card : " + heapManager.CardOnTop);
-
-
-
+    public  void OnSceneEnter(){
+        System.out.println("Je rentre dans le game");
+        ArrayList<Joueur> joueurs = gameManager.StartGame();
 
         // Create grid pane which will contain all players
         GridPane grid = new GridPane();
@@ -45,28 +45,31 @@ public class GameScene extends CustomScene{
         grid.setHgap(10);
         grid.setVgap(10);
 
-        grid.add(joueur1, 0, 0, 1, 2);
-        grid.add(joueur2, 1, 0);
+
+        int row = 0;
+        int col = 0;
+
+        for(int i =0; i < joueurs.size(); i++){
+            grid.add(joueurs.get(i), col, row);
+
+            col++;
+            if(col == 2){
+                col = 0;
+                row++;
+            }
+        }
+
+
+
 
         grid.setGridLinesVisible(true);
 
         Scene scene = new Scene(grid);
         this.scene = scene;
+    }
 
-
-
-        //Set app size to the screen size
-       /*stage.setX(screenSize.getMinX());
-        stage.setY(screenSize.getMinY());
-        stage.setWidth(screenSize.getWidth());
-        stage.setHeight(screenSize.getHeight());
-
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();*/
-
-
-
+    public  void OnSceneExit(){
+        System.out.println("C pas moi qui kite le game c moi le game ki me kitty");
     }
 
 
