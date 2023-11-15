@@ -19,7 +19,7 @@ public class GameManager {
         instance = this;
     }
 
-    public ArrayList<Joueur> StartGame(){
+    public ArrayList<Joueur> StartGame() throws Exception {
         HeapManager heapManager = new HeapManager();
 
         CardManager cardManager = new CardManager();

@@ -13,7 +13,7 @@ public abstract class CustomScene{
         return this.scene;
     }
 
-    public abstract void OnSceneEnter();
+    public abstract void OnSceneEnter() throws Exception;
 
     public abstract void OnSceneExit();
 

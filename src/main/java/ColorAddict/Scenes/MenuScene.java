@@ -40,7 +40,13 @@ public class MenuScene extends CustomScene{
         playersBox.getChildren().addAll(minusButton, numPlayersLabel, plusButton);
 
         Button startButton = new Button("Start Game");
-        startButton.setOnAction(e -> startGame());
+        startButton.setOnAction(e -> {
+            try {
+                startGame();
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         menu.getChildren().addAll(titleLabel, playersLabel, playersBox, startButton);
         Scene scene = new Scene(menu, 400, 400);
@@ -61,7 +67,7 @@ public class MenuScene extends CustomScene{
         }
     }
 
-    private void startGame() {
+    private void startGame() throws Exception {
         SceneManager.instance.changeScene("GameScene");
     }
 

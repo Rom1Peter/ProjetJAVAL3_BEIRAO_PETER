@@ -33,9 +33,9 @@ public class GameScene extends CustomScene{
         System.out.println("width : " + width + " height : " + height);
     }
 
-    public  void OnSceneEnter(){
+    public  void OnSceneEnter() throws Exception {
         System.out.println("Je rentre dans le game");
-        ArrayList<Joueur> joueurs = gameManager.StartGame();
+            ArrayList<Joueur> joueurs = gameManager.StartGame();
 
         // Create grid pane which will contain all players
         GridPane grid = new GridPane();
@@ -59,13 +59,16 @@ public class GameScene extends CustomScene{
             }
         }
 
-
-
-
-        grid.setGridLinesVisible(true);
+        //grid.setGridLinesVisible(true);
 
         Scene scene = new Scene(grid);
         this.scene = scene;
+
+
+        for (Joueur joueur : joueurs) {
+            joueur.AddKeyListening();
+
+        }
     }
 
     public  void OnSceneExit(){

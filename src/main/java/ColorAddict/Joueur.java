@@ -1,8 +1,11 @@
 package ColorAddict;
 
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -11,7 +14,8 @@ import java.util.ArrayList;
 public class Joueur extends Group {
 
     public static final String CARD_URL = "src/assets/UnoBlankCards.png";
-    public static final String BG_URL = "src/assets/Background.png";
+    public static final String BG_URL = "src/assets/Background.jpg";
+
     private static final int START_X_POS = 0;
     private static final int START_Y_POS = 0;
     private static final int STEP_X = 100;
@@ -23,9 +27,8 @@ public class Joueur extends Group {
     private int indexSelectedCard = 0;
     private Group[] cards = new Group[3];
 
-    public Joueur() {
+    public Joueur() throws Exception {
         super();
-
     }
 
 
@@ -33,15 +36,31 @@ public class Joueur extends Group {
         hand.add(carte);
     }
 
-    public void drawCard(){
-        addCard(stack.get(0));
-        stack.remove(0);
+
+    public void augmenteCardIndex() {
+        System.out.println("JE MONTE L4INDEX");
+        if (indexSelectedCard < hand.size() - 1) {
+            SelectCard(indexSelectedCard + 1);
+        }
     }
 
+    public void diminueCardIndex() {
+        System.out.println("JE DIMINUE LINDEX");
+        if (indexSelectedCard == 0) {
+            SelectCard(cards.length-1);
+        }
+        SelectCard(indexSelectedCard - 1);
+
+    }
+
+    public void playCard(){
+        stack.add(hand.get(indexSelectedCard));
+        hand.remove(indexSelectedCard);
+        SelectCard(0);
+    }
 
     public void SetPioche(ArrayList<Card> pioche){
         this.stack = pioche;
-
 
     }
 
@@ -50,8 +69,10 @@ public class Joueur extends Group {
 
         Image bg = new Image(new File(BG_URL).toURI().toString());
         ImageView bgView = new ImageView(bg);
-        bgView.setFitHeight(250);
+        bgView.setFitHeight(225);
         bgView.setFitWidth(450);
+
+
         this.getChildren().add(bgView);
         int posX = START_X_POS;
         int posY = START_Y_POS;
@@ -64,6 +85,7 @@ public class Joueur extends Group {
             imageView.setFitWidth(70);
             imageView.setX(posX);
             imageView.setY(posY);
+
 
 
             Text textUI = new Text(card.text);
@@ -94,4 +116,16 @@ public class Joueur extends Group {
         indexSelectedCard = index;
         cards[indexSelectedCard].setTranslateY(-20);
     }
+
+    public void AddKeyListening() throws NoSuchMethodException {
+        SceneManager.instance.getCurrentScene().getScene().setOnKeyPressed(e ->{
+            if(e.getCode() == KeyCode.A){
+                diminueCardIndex();
+            }
+
+        });
+
+    }
+
+
 }
