@@ -31,4 +31,25 @@ public enum CardColor {
                 return Paint.valueOf("white");
         }
     }
+
+    public String toString() {
+        switch (this) {
+            case RED:
+                return "RED";
+            case BLUE:
+                return "BLUE";
+            case GREEN:
+                return "GREEN";
+            case YELLOW:
+                return "YELLOW";
+            case BLACK:
+                return "BLACK";
+            case ORANGE:
+                return "ORANGE";
+            case PINK:
+                return "PINK";
+            default:
+                return "WHITE";
+        }
+    }
 }

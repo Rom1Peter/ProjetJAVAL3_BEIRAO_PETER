@@ -7,6 +7,7 @@ import ColorAddict.Joueur;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Screen;
 
@@ -36,6 +37,7 @@ public class GameScene extends CustomScene{
     public  void OnSceneEnter() throws Exception {
         System.out.println("Je rentre dans le game");
             ArrayList<Joueur> joueurs = gameManager.StartGame();
+        BorderPane borderPane = new BorderPane();
 
         // Create grid pane which will contain all players
         GridPane grid = new GridPane();
@@ -60,8 +62,10 @@ public class GameScene extends CustomScene{
         }
 
         //grid.setGridLinesVisible(true);
+        borderPane.setLeft(grid);
+        borderPane.setCenter(HeapManager.instance);
 
-        Scene scene = new Scene(grid);
+        Scene scene = new Scene(borderPane);
         this.scene = scene;
 
 
