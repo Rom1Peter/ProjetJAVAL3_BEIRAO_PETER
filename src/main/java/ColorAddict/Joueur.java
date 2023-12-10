@@ -38,6 +38,7 @@ public class Joueur extends Group {
     public Joueur(PlayerConfig playerConfig) throws Exception {
         super();
         this.config = playerConfig;
+
     }
 
 
@@ -110,6 +111,7 @@ public class Joueur extends Group {
         bgView.setFitWidth(450);
 
 
+
         this.getChildren().add(bgView);
         int posX = START_X_POS;
         int posY = START_Y_POS;
@@ -144,6 +146,7 @@ public class Joueur extends Group {
     }
 
     public void PickCard(){
+        System.out.println("Je pioche une carte");
         if(stack.isEmpty()){
             System.out.println("La pioche est vide");
             return;
@@ -159,11 +162,17 @@ public class Joueur extends Group {
         int posX = START_X_POS;
         int posY = START_Y_POS;
 
-        for (int i = 0; i < cards.size(); i++) {
-            cards.get(i).setTranslateX(posX);
-            cards.get(i).setTranslateY(posY);
-            posX += STEP_X;
+        for (int i = 0; i < 2; i++) {
+            if (cards.get(i) == null) {
+                posX = i * STEP_X;
+                posY = 0;
+                break;
+            }
         }
+
+        System.out.println("posX : " + posX + " posY : " + posY);
+
+
 
         //Add new card to the group
         Group cardGroup = card.getCardUI(posX, posY);
