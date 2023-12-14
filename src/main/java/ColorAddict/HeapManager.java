@@ -19,6 +19,8 @@ public class HeapManager extends Group {
     public HeapManager(){
         if(instance != null){
             instance = this;
+        }else {
+            instance = this;
         }
     }
 

@@ -2,36 +2,37 @@ package ColorAddict;
 
 import javafx.event.EventHandler;
 import javafx.scene.Group;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class Joueur extends Group {
 
-    public static final String CARD_URL = "src/assets/UnoBlankCards.png";
     public static final String BG_URL = "src/assets/Background.jpg";
+    public static boolean isGameOver = false;
 
-    private static final int START_X_POS = 0;
-    private static final int START_Y_POS = 0;
+    private static final int START_X_POS = 20;
+    private static final int START_Y_POS = 20;
     private static final int STEP_X = 100;
     private static final int STEP_Y = 50;
     private static final double CARD_RADIUS = 150.0;
     private static final double CENTER_X = 250.0;
     private static final double CENTER_Y = 250.0;
 
+    private static final double STACK_X = 350;
+    private static final double STACK_Y = 125;
+
     public ArrayList<Card> hand = new ArrayList<Card>();
     public ArrayList<Card> stack = new ArrayList<Card>();
+    private ArrayList<Group> cards = new ArrayList();
+
+    private StackDisplay stackDisplay;
 
     public PlayerConfig config;
     private int indexSelectedCard = 0;
-    private ArrayList<Group> cards = new ArrayList();
 
     private Group cardGroup;
 
@@ -66,40 +67,52 @@ public class Joueur extends Group {
 
     }
 
-    public void playCard(){
+    public void playCard() {
         System.out.println("Je joue la carte : " + hand.get(indexSelectedCard).toString());
-        if(RuleManager.instance.checkPlayCard(hand.get(indexSelectedCard))){
-            System.out.println("La carte est jouable " + hand.get(indexSelectedCard).toString() + " " + HeapManager.instance.CardOnTop.toString());
+
+        if (RuleManager.instance.checkPlayCard(hand.get(indexSelectedCard))) {
+            System.out.println("La carte est jouable " + hand.get(indexSelectedCard).toString() +
+                    " " + (HeapManager.instance.CardOnTop != null ? HeapManager.instance.CardOnTop.toString() : "null"));
 
             HeapManager.instance.SetCardOnTop(hand.get(indexSelectedCard));
 
             hand.remove(indexSelectedCard);
-
             this.getChildren().remove(cards.get(indexSelectedCard));
             cards.remove(indexSelectedCard);
 
-            if(cards.isEmpty()) {
+            if (cards.isEmpty() && stack.isEmpty()) {
                 System.out.println("Le joueur a gagné");
-                return;
-            }
-            if(cards.get(indexSelectedCard -1 ) != null){
-                SelectCard(indexSelectedCard - 1);
-                return;
-            }
-            else{
-                SelectCard(indexSelectedCard + 1);
-                return;
-            }
-        }
-        else{
-            System.out.println("La carte n'est pas jouable " + hand.get(indexSelectedCard).toString() + " " + HeapManager.instance.CardOnTop.toString());
-        }
+                isGameOver = true;
+                GameManager.instance.DisplayEndWindow();
 
+                return;
+            }
+            indexSelectedCard = -1;
+
+            int newIndex = hand.size()-1;
+            if (newIndex >= 0 && newIndex < cards.size() && cards.get(newIndex) != null) {
+                SelectCard(newIndex);
+                return;
+            }
+
+            newIndex = 0;
+            if (newIndex >= 0 && newIndex < cards.size() && cards.get(newIndex) != null) {
+                SelectCard(newIndex);
+                return;
+            }
+        } else {
+            System.out.println("La carte n'est pas jouable " + hand.get(indexSelectedCard).toString() +
+                    " " + (HeapManager.instance.CardOnTop != null ? HeapManager.instance.CardOnTop.toString() : "null"));
+        }
     }
+
 
     public void SetPioche(ArrayList<Card> pioche){
         this.stack = pioche;
 
+        //Add stack UI
+        this.stackDisplay = new StackDisplay(this.stack.size(), (int) STACK_X, (int) STACK_Y);
+        this.getChildren().add(this.stackDisplay.getStackUI());
     }
 
     public void SetMain(ArrayList<Card> main){
@@ -109,7 +122,6 @@ public class Joueur extends Group {
         ImageView bgView = new ImageView(bg);
         bgView.setFitHeight(225);
         bgView.setFitWidth(450);
-
 
 
         this.getChildren().add(bgView);
@@ -122,28 +134,36 @@ public class Joueur extends Group {
             cards.add(cardGroup);
 
             this.getChildren().addAll(cardGroup);
-            posX += STEP_X;
 
         }
         SelectCard(0);
+        RefreshCardDisplay();
         System.out.println("Main du joueur : " + hand.toString());
+
+
+
     }
 
-    public void SelectCard(int index){
+    public void SelectCard(int index) {
         System.out.println("From " + indexSelectedCard + " to " + index);
         try {
-            if(cards.get(index) == null)
+            if (index < 0 || index >= cards.size() || cards.get(index) == null) {
+                System.out.println("Invalid index or null card at index " + index);
                 return;
-            if (cards.get(indexSelectedCard) != null) {
+            }
+
+            if (indexSelectedCard != -1) {
                 cards.get(indexSelectedCard).setTranslateY(0);
             }
 
             indexSelectedCard = index;
             cards.get(indexSelectedCard).setTranslateY(-20);
-        }catch (Exception e){
-            System.out.println("Erreur de selection de carte en allant de " + indexSelectedCard + " à " + index + " " + cards.size());
+        } catch (Exception e) {
+            System.out.println("Error selecting card from " + indexSelectedCard + " to " + index + " " + cards.size());
+            e.printStackTrace(); // Print the stack trace for debugging purposes
         }
     }
+
 
     public void PickCard(){
         System.out.println("Je pioche une carte");
@@ -152,45 +172,61 @@ public class Joueur extends Group {
             return;
         }
         if(hand.size() < 3){
-        //Place card where is empty
-        Card card = stack.get(0);
-        hand.add(card);
-        stack.remove(0);
+            //Calculate posX and posY of new cards
 
-        //Calculate posX and posY of new cards
-
-        int posX = START_X_POS;
-        int posY = START_Y_POS;
-
-        for (int i = 0; i < 2; i++) {
-            if (cards.get(i) == null) {
-                posX = i * STEP_X;
-                posY = 0;
-                break;
-            }
-        }
-
-        System.out.println("posX : " + posX + " posY : " + posY);
+            int posX = START_X_POS;
+            int posY = START_Y_POS;
 
 
+            //Pick card
+            Card card = stack.get(0);
+            System.out.println("Carte piochée :" + card);
+            hand.add(card);
+            stack.remove(0);
 
-        //Add new card to the group
-        Group cardGroup = card.getCardUI(posX, posY);
-        cards.add(cardGroup);
-        this.getChildren().addAll(cardGroup);
-        SelectCard(cards.size() - 1);
-        System.out.println("Main du joueur : " + hand.toString());
+            this.stackDisplay.setStackUI(stack.size());
+
+
+            //Add new card to the group
+            Group cardGroup = card.getCardUI(posX, posY);
+            cards.add(cardGroup);
+            this.getChildren().addAll(cardGroup);
+
+            RefreshCardDisplay();
+            SelectCard(indexSelectedCard);
+            System.out.println("Main du joueur : " + hand.toString());
+
         }
         else{
             System.out.println("La main est pleine");
         }
     }
 
+    public void RefreshCardDisplay(){
+        //Change card position depending on their index
+        //Calculate posX of cards to display
+        int posX = START_X_POS;
+        int posY = START_Y_POS;
+
+        for (int i = 0; i < cards.size(); i++) {
+            if (cards.get(i) != null) {
+                cards.get(i).setTranslateX(posX);
+                cards.get(i).setTranslateY(posY);
+                posX += STEP_X;
+            }
+        }
+
+    }
+
     public void AddKeyListening() throws NoSuchMethodException {
         SceneManager.instance.getCurrentScene().getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler(){
             @Override
             public void handle(javafx.event.Event event) {
+                if(isGameOver)
+                    return;
+
                 KeyEvent keyEvent = (KeyEvent) event;
+
                 if(keyEvent.getCode() == config.keyLeft){
                     diminueCardIndex();
                 }

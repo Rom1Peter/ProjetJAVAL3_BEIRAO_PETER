@@ -1,19 +1,17 @@
 package ColorAddict.Scenes;
 
-import ColorAddict.CardManager;
-import ColorAddict.GameManager;
-import ColorAddict.HeapManager;
-import ColorAddict.Joueur;
+import ColorAddict.*;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Screen;
+import javafx.stage.*;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
-
+import java.util.List;
 
 
 public class GameScene extends CustomScene{
@@ -68,12 +66,47 @@ public class GameScene extends CustomScene{
         Scene scene = new Scene(borderPane);
         this.scene = scene;
 
-
         for (Joueur joueur : joueurs) {
             joueur.AddKeyListening();
 
         }
+
     }
+
+    public void DisplayPopUp(){
+        System.out.println("Je display le popup");
+        System.out.println("Game Over");
+        Button goMenu = new Button("Menu");
+        goMenu.setOnAction(e -> {
+            try {
+                SceneManager.instance.changeScene("MenuScene");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+        Button goGame = new Button("Rejouer");
+        goGame.setOnAction(e -> {
+            try {
+                SceneManager.instance.changeScene("GameScene");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
+
+        List<Button> buttons = new ArrayList<Button>();
+        buttons.add(goMenu);
+        buttons.add(goGame);
+
+
+        PopUpDisplay popupWindow = new PopUpDisplay("Game Over", buttons);
+
+        Popup popup = new Popup();
+        popup.getContent().add(popupWindow);
+
+        // Show the Popup above everything
+        popup.show(scene.getWindow());
+        }
+
 
     public  void OnSceneExit(){
         System.out.println("C pas moi qui kite le game c moi le game ki me kitty");

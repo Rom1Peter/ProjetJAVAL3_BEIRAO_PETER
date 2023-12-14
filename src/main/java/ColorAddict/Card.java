@@ -4,6 +4,7 @@ import ColorAddict.Enums.CardColor;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -13,6 +14,10 @@ public class Card {
 
     private CardColor color;
     private String text;
+
+    private Group cardUI;
+
+
 
     public Card(CardColor color, String text) {
         this.color = color;
@@ -33,7 +38,6 @@ public class Card {
         Image image = new Image(new File(CARD_URL).toURI().toString());
         ImageView imageView = new ImageView(image);
 
-
         imageView.setFitHeight(100);
         imageView.setFitWidth(70);
         imageView.setX(posX);
@@ -41,6 +45,7 @@ public class Card {
 
 
         Text textUI = new Text(text);
+        textUI.setFont(new Font("Arial", 15));
         double textX = (imageView.getFitWidth() - textUI.getLayoutBounds().getWidth()) / 2;
         double textY = (imageView.getFitHeight() + textUI.getLayoutBounds().getHeight()) / 2;
         textUI.setX(textX + posX);
@@ -50,6 +55,7 @@ public class Card {
 
         Group cardGroup = new Group();
         cardGroup.getChildren().addAll(imageView, textUI);
+        this.cardUI = cardGroup;
         return cardGroup;
     }
 
@@ -66,6 +72,7 @@ public class Card {
 
 
         Text textUI = new Text(text);
+        textUI.setFont(new Font("Arial", 15));
         double textX = (imageView.getFitWidth() - textUI.getLayoutBounds().getWidth()) / 2;
         double textY = (imageView.getFitHeight() + textUI.getLayoutBounds().getHeight()) / 2;
         textUI.setX(textX + posX);
@@ -75,8 +82,11 @@ public class Card {
 
         Group cardGroup = new Group();
         cardGroup.getChildren().addAll(imageView, textUI);
+        this.cardUI = cardGroup;
         return cardGroup;
     }
+
+
 
     public CardColor getColor() {
         return color;
@@ -85,4 +95,6 @@ public class Card {
     public String getText() {
         return text;
     }
+
+
 }

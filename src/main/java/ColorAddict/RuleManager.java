@@ -11,6 +11,8 @@ public class RuleManager {
     public RuleManager(){
         if(instance != null){
             instance = this;
+        }else {
+            instance = this;
         }
     }
 

@@ -77,4 +77,7 @@ public class SceneManager {
     }
 
 
+    public void DisplayPopUp(){
+        ((GameScene) this.scenes.get("GameScene")).DisplayPopUp();
+    }
 }

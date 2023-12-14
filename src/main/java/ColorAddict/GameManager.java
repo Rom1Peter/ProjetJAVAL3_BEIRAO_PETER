@@ -1,10 +1,14 @@
 package ColorAddict;
 
 import ColorAddict.Enums.GameMode;
+import javafx.event.Event;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
+import javafx.stage.PopupWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameManager {
 
@@ -47,10 +51,19 @@ public class GameManager {
 
         joueurs = cardManager.GiveHandAndStack(joueurs);
 
+
+
         System.out.println("Heap card : " + heapManager.CardOnTop);
 
         return joueurs;
     }
+
+    public void DisplayEndWindow(){
+
+
+        SceneManager.instance.DisplayPopUp();
+    }
+
 
 
 }

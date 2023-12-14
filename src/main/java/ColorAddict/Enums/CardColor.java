@@ -20,7 +20,7 @@ public enum CardColor {
             case GREEN:
                 return Paint.valueOf("green");
             case YELLOW:
-                return Paint.valueOf("yellow");
+                return Paint.valueOf("#a4ba00");
             case BLACK:
                 return Paint.valueOf("black");
             case ORANGE:
