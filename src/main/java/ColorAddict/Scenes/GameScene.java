@@ -1,10 +1,12 @@
 package ColorAddict.Scenes;
 
 import ColorAddict.*;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.*;
@@ -108,8 +110,20 @@ public class GameScene extends CustomScene{
         }
 
 
+
     public  void OnSceneExit(){
         System.out.println("C pas moi qui kite le game c moi le game ki me kitty");
+
+
+            //Reset the game
+        GameManager old = gameManager;
+        gameManager = new GameManager();
+
+        gameManager.gameMode = old.gameMode;
+        gameManager.nbJoueurs = old.nbJoueurs;
+        gameManager.nbIA = old.nbIA;
+
+
     }
 
 

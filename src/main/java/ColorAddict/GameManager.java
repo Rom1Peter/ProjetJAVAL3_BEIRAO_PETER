@@ -41,6 +41,8 @@ public class GameManager {
         RuleManager ruleManager = new RuleManager();
         CardManager cardManager = new CardManager();
         cardManager.CreateCards();
+        Joueur.isGameOver = false;
+
 
         ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
 

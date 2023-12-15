@@ -35,9 +35,12 @@ public class HeapManager extends Group {
         }
 
         vBox.getChildren().clear();
+        ImageView imageView = new ImageView(new Image(new File("src/assets/Background.jpg").toURI().toString()));
+        imageView.setFitHeight(540);
+        imageView.setFitWidth(200);
         Group bigCard = card.getBigCardUI(0, 0);
 
-        vBox.getChildren().add(bigCard);
+        vBox.getChildren().addAll(imageView,bigCard);
 
     }
 }

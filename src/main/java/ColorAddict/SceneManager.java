@@ -31,21 +31,24 @@ public class SceneManager {
     //Scene actuelle
     private CustomScene currentScene;
 
+    public static Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+
     public SceneManager(Stage stage){
         this.stage = stage;
         if (instance == null)
             instance = this;
 
-        scenes.put("MenuScene", new MenuScene());
-        scenes.put("GameScene", new GameScene());
 
-        Rectangle2D screenSize = Screen.getPrimary().getVisualBounds();
+
 
         //Set app size to the screen size
         stage.setX(screenSize.getMinX());
         stage.setY(screenSize.getMinY());
         stage.setWidth(screenSize.getWidth());
         stage.setHeight(screenSize.getHeight());
+
+        scenes.put("MenuScene", new MenuScene());
+        scenes.put("GameScene", new GameScene());
 
         stage.setTitle("Hello!");
 
