@@ -4,18 +4,18 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 import java.io.File;
 
 public class HeapManager extends Group {
 
+    private static final String BG_URL = "src/assets/Table.jpg";
     public static HeapManager instance = new HeapManager();
+
     public Card CardOnTop;
 
-    private VBox vBox;
+    private StackPane heapStackPane;
     public HeapManager(){
         if(instance != null){
             instance = this;
@@ -27,20 +27,26 @@ public class HeapManager extends Group {
     public void SetCardOnTop(Card card){
         CardOnTop = card;
 
-        if(vBox == null) {
-            vBox = new VBox();
-            vBox.setSpacing(10);
-            vBox.setPadding(new Insets(0, 20, 10, 20));
-            this.getChildren().add(vBox);
+        if(heapStackPane == null) {
+            heapStackPane = new StackPane();
+
+            heapStackPane.setPadding(new Insets(0, 0 , 0, -100));
+            this.getChildren().add(heapStackPane);
         }
 
-        vBox.getChildren().clear();
-        ImageView imageView = new ImageView(new Image(new File("src/assets/Background.jpg").toURI().toString()));
-        imageView.setFitHeight(540);
-        imageView.setFitWidth(200);
+        heapStackPane.getChildren().clear();
+        ImageView imageView = new ImageView(new Image(new File(BG_URL).toURI().toString()));
+        imageView.setFitHeight(1080);
+        imageView.setFitWidth(500);
         Group bigCard = card.getBigCardUI(0, 0);
+        heapStackPane.getChildren().addAll(imageView, bigCard);
 
-        vBox.getChildren().addAll(imageView,bigCard);
+    }
 
+    public void CheckStuckedGame(){
+        if (RuleManager.instance.checkIfGameStuck()) {
+            System.out.println("Game stuck");
+            CardManager.instance.RedispatchCards(GameManager.instance.getPlayers());
+        }
     }
 }

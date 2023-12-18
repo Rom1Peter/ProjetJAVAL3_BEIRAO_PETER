@@ -1,5 +1,6 @@
-package ColorAddict;
+package ColorAddict.Players;
 
+import ColorAddict.*;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
@@ -9,9 +10,9 @@ import javafx.scene.input.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 
-public class Joueur extends Group {
+public abstract class PlayerAction extends Group {
 
-    public static final String BG_URL = "src/assets/Background.jpg";
+    public static final String BG_URL = "src/assets/Table.jpg";
     public static boolean isGameOver = false;
 
     private static final int START_X_POS = 20;
@@ -31,14 +32,12 @@ public class Joueur extends Group {
 
     private StackDisplay stackDisplay;
 
-    public PlayerConfig config;
     private int indexSelectedCard = 0;
 
     private Group cardGroup;
 
-    public Joueur(PlayerConfig playerConfig) throws Exception {
+    public PlayerAction(){
         super();
-        this.config = playerConfig;
 
     }
 
@@ -195,7 +194,7 @@ public class Joueur extends Group {
             RefreshCardDisplay();
             SelectCard(indexSelectedCard);
             System.out.println("Main du joueur : " + hand.toString());
-
+            HeapManager.instance.CheckStuckedGame();
         }
         else{
             System.out.println("La main est pleine");
@@ -218,34 +217,11 @@ public class Joueur extends Group {
 
     }
 
-    public void AddKeyListening() throws NoSuchMethodException {
-        SceneManager.instance.getCurrentScene().getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler(){
-            @Override
-            public void handle(javafx.event.Event event) {
-                if(isGameOver)
-                    return;
-
-                KeyEvent keyEvent = (KeyEvent) event;
-
-                if(keyEvent.getCode() == config.keyLeft){
-                    diminueCardIndex();
-                }
-                if(keyEvent.getCode() == config.keyRight){
-                    augmenteCardIndex();
-                }
-
-                if(keyEvent.getCode() == config.keyUp){
-                    playCard();
-                }
-
-                if(keyEvent.getCode() == config.keyDown){
-                    PickCard();
-                }
-            }
-        });
-
-
+    public int getIndexSelectedCard(){
+        return indexSelectedCard;
     }
+
+
 
 
 }

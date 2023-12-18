@@ -65,14 +65,14 @@ public class Card {
         ImageView imageView = new ImageView(image);
 
 
-        imageView.setFitHeight(100);
-        imageView.setFitWidth(70);
+        imageView.setFitHeight(750);
+        imageView.setFitWidth(400);
         imageView.setX(posX);
         imageView.setY(posY);
 
 
         Text textUI = new Text(text);
-        textUI.setFont(new Font("Arial", 15));
+        textUI.setFont(new Font("Arial", 75));
         double textX = (imageView.getFitWidth() - textUI.getLayoutBounds().getWidth()) / 2;
         double textY = (imageView.getFitHeight() + textUI.getLayoutBounds().getHeight()) / 2;
         textUI.setX(textX + posX);
@@ -95,6 +95,7 @@ public class Card {
     public String getText() {
         return text;
     }
+
 
 
 }

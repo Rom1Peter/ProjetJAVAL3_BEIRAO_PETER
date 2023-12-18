@@ -1,12 +1,13 @@
 package ColorAddict;
 
 import ColorAddict.Enums.CardColor;
+import ColorAddict.Players.PlayerAction;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class CardManager {
-    private final int NBCARDS_MAX = 42;
+    private int NBCARDS_MAX = 0;
     private final int NBCARDS_MAX_JOKER = 8;
     private final int NBCARDS_MAX_PER_COLOR = 6;
     private final int NBCARDS_MAX_PER_HAND = 3;
@@ -14,42 +15,49 @@ public class CardManager {
     public ArrayList<Card> cards = new ArrayList<Card>();
     private int nbCards = 0;
 
+    public static CardManager instance = new CardManager();
 
 
-    public void CreateCards(){
-        int nbCardsPerColor = 0;
-
-        //Tant que pas assez de carte dans le paquet
-        while(NBCARDS_MAX != nbCards){
-            //System.out.println("On passe à la carte : " + nbCards);
-            //Pour chaque couleur
-            for(CardColor color : CardColor.values()){
-                //System.out.println("On passe à la couleur : " + color);
-
-                //Tant que j'ai pas assez de carte de cette couleur
-                while (NBCARDS_MAX_PER_COLOR != nbCardsPerColor){
-
-                    //Pour chaque text possible
-                    for(CardColor text : CardColor.values()){
-                        //System.out.println("On passe au text : " + text);
-                        //On ne met pas la carte si elle a la même couleur que le text
-                        if(text.name() != color.name()) {
-                            cards.add(CreateCard(color, text.toString()));
-                            nbCardsPerColor++;
-                            nbCards++;
-                        }
-                    }
-                }
-                nbCardsPerColor = 0;
-
-            }
-        }
-
-        //On crée les jokers
-        for(int i = 0; i < NBCARDS_MAX_JOKER; i++){
-            cards.add(CreateJoker());
+    public CardManager(){
+        if(instance != null){
+            instance = this;
+        }else {
+            instance = this;
         }
     }
+    public void CreateCards() {
+        int maxCards = RuleManager.instance.getNbColors() * NBCARDS_MAX_PER_COLOR;
+        CardColor[] colors = CardColor.values();
+        int nbColors = RuleManager.instance.getNbColors();
+
+        for (int i = 0; i < nbColors; i++) {
+            createColorCards(colors[i], colors, nbColors);
+        }
+
+        createJokers(NBCARDS_MAX_JOKER);
+    }
+
+    private void createColorCards(CardColor color, CardColor[] colors, int nbColors) {
+        int nbCardsPerColor = 0;
+
+        while (nbCardsPerColor < NBCARDS_MAX_PER_COLOR) {
+            for (int i = 0; i < nbColors; i++) {
+                if (!colors[i].equals(color)) {
+                    cards.add(CreateCard(color, colors[i].toString()));
+                    nbCardsPerColor++;
+                }
+                if (nbCardsPerColor == NBCARDS_MAX_PER_COLOR) break;
+            }
+        }
+    }
+
+    private void createJokers(int maxJokers) {
+        for (int i = 0; i < maxJokers; i++) {
+            cards.add(CreateJoker());
+        }
+        System.out.println("Created " + maxJokers + " jokers");
+    }
+
 
     public Card CreateCard(CardColor color, String text){
         //System.out.println("Just create a card with the color : " + color + "and the text : " + text);
@@ -60,7 +68,7 @@ public class CardManager {
         return new Card(CardColor.BLACK, "Joker");
     }
 
-    public ArrayList<Joueur> GiveHandAndStack(ArrayList<Joueur> j){
+    public ArrayList<PlayerAction> GiveHandAndStack(ArrayList<PlayerAction> j){
 
         boolean isImpair = false;
         Card cardImpair = null;
@@ -75,7 +83,7 @@ public class CardManager {
         HeapManager.instance.SetCardOnTop(heapCard);
 
         //On donne les cartes pour les mains aux joueurs
-        for(Joueur joueur : j){
+        for(PlayerAction joueur : j){
             ArrayList<Card> hand = new ArrayList<Card>();
             ArrayList<Card> stack = new ArrayList<Card>();
 
@@ -100,7 +108,7 @@ public class CardManager {
 
 
         //On donne les cartes pour les piles aux joueurs
-        for(Joueur joueur : j){
+        for(PlayerAction joueur : j){
             ArrayList<Card> stack = new ArrayList<Card>();
 
             for(int i = 0; i < nbCardsPerStack; i++){
@@ -111,6 +119,52 @@ public class CardManager {
         }
 
         return j;
+    }
+
+    public void RedispatchCards(ArrayList<PlayerAction> players) {
+
+        cards.clear();
+
+        for (PlayerAction player : players) {
+            for (Card card : player.hand) {
+                cards.add(card);
+            }
+            for (Card card : player.stack) {
+                cards.add(card);
+            }
+        }
+
+        Collections.shuffle(cards);
+
+        HeapManager.instance.SetCardOnTop(PickCard());
+
+
+        for (PlayerAction player : players) {
+            ArrayList<Card> hand = new ArrayList<Card>();
+
+            for(int i = 0; i < NBCARDS_MAX_PER_HAND; i++){
+                hand.add(PickCard());
+            }
+
+            player.SetMain(hand);
+        }
+
+        int nbCardsPerStack = cards.size() / players.size();
+
+        for(PlayerAction player : players){
+            ArrayList<Card> stack = new ArrayList<Card>();
+
+            for(int i = 0; i < nbCardsPerStack; i++){
+                stack.add(PickCard());
+            }
+
+            player.SetPioche(stack);
+        }
+
+
+
+
+
     }
 
     public Card PickCard(){

@@ -1,12 +1,13 @@
-package Rules;
+package ColorAddict.Rules;
 
 import ColorAddict.Card;
 import ColorAddict.HeapManager;
 
 public class Normal extends GameRule{
+
     @Override
     public void RuleStart() {
-
+        nbColor = 7;
     }
 
     @Override

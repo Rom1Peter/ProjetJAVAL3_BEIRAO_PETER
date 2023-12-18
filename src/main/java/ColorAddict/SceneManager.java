@@ -50,7 +50,8 @@ public class SceneManager {
         scenes.put("MenuScene", new MenuScene());
         scenes.put("GameScene", new GameScene());
 
-        stage.setTitle("Hello!");
+        stage.setTitle("Color Addict");
+
 
     }
 

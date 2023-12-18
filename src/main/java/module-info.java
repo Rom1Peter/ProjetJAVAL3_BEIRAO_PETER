@@ -7,4 +7,6 @@ module com.example.projet {
     exports ColorAddict;
     exports ColorAddict.Enums;
     opens ColorAddict.Enums to javafx.fxml;
+    exports ColorAddict.Players;
+    opens ColorAddict.Players to javafx.fxml;
 }

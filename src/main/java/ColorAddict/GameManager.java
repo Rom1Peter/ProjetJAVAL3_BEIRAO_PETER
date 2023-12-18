@@ -1,20 +1,20 @@
 package ColorAddict;
 
+import ColorAddict.AI.AIPlayer;
 import ColorAddict.Enums.GameMode;
-import javafx.event.Event;
-import javafx.scene.control.Button;
+import ColorAddict.Players.Player;
+import ColorAddict.Players.PlayerAction;
 import javafx.scene.input.KeyCode;
-import javafx.stage.PopupWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class GameManager {
 
     public static GameManager instance;
 
     public int nbJoueurs;
+
     public int nbIA;
 
     //ajout règle du jeu
@@ -23,6 +23,7 @@ public class GameManager {
 
     public GameMode gameMode;
 
+    private ArrayList<PlayerAction> joueurs;
     public GameManager(){
         instance = this;
 
@@ -33,37 +34,57 @@ public class GameManager {
         playerConfigs.put(3, new PlayerConfig(KeyCode.G, KeyCode.J, KeyCode.Y, KeyCode.H));
         playerConfigs.put(4, new PlayerConfig(KeyCode.COMMA, KeyCode.COLON, KeyCode.K, KeyCode.PERIOD));
         playerConfigs.put(5, new PlayerConfig( KeyCode.L, KeyCode.STAR,KeyCode.P, KeyCode.M));
-
-    }
-
-    public ArrayList<Joueur> StartGame() throws Exception {
         HeapManager heapManager = new HeapManager();
         RuleManager ruleManager = new RuleManager();
         CardManager cardManager = new CardManager();
-        cardManager.CreateCards();
-        Joueur.isGameOver = false;
+    }
+
+    public ArrayList<PlayerAction> StartGame() throws Exception {
+        CardManager.instance.CreateCards();
+        PlayerAction.isGameOver = false;
 
 
-        ArrayList<Joueur> joueurs = new ArrayList<Joueur>();
+        ArrayList<PlayerAction> joueurs = new ArrayList<PlayerAction>();
 
         for (int i = 0; i < nbJoueurs; i++){
-            joueurs.add(new Joueur(playerConfigs.get(i)));
+            joueurs.add(new Player(playerConfigs.get(i)));
         }
 
+        for (int i = 0; i < nbIA; i++){
+            joueurs.add(new AIPlayer());
+        }
+        this.joueurs = joueurs;
 
-        joueurs = cardManager.GiveHandAndStack(joueurs);
+
+        this.joueurs = CardManager.instance.GiveHandAndStack(joueurs);
 
 
 
-        System.out.println("Heap card : " + heapManager.CardOnTop);
 
-        return joueurs;
+        System.out.println("Heap card : " + HeapManager.instance.CardOnTop);
+
+        return this.joueurs;
     }
+
+    public void EndGame(){
+        System.out.println("Fin de la partie");
+
+        for ( PlayerAction joueur : joueurs) {
+            if (joueur instanceof AIPlayer)
+                ((AIPlayer) joueur).StopAI();
+        }
+    }
+
 
     public void DisplayEndWindow(){
 
 
         SceneManager.instance.DisplayPopUp();
+        EndGame();
+    }
+
+    public ArrayList<PlayerAction> getPlayers(){
+        return joueurs;
     }
 
 

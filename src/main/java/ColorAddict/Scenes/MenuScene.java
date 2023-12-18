@@ -1,11 +1,13 @@
 package ColorAddict.Scenes;
 
 import ColorAddict.GameManager;
+import ColorAddict.RuleManager;
 import ColorAddict.SceneManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,14 +23,27 @@ import java.io.File;
 
 public class MenuScene extends CustomScene{
 
-    private static final int MIN_PLAYERS = 2;
+    private static final int MIN_PLAYERS = 1;
     private static final int MAX_PLAYERS = 6;
+
+    private static final int MIN_AI_PLAYERS = 0;
+    private static final int MAX_AI_PLAYERS = 4;
     private int numPlayers = MIN_PLAYERS;
+
+    private int numAIPlayers = MIN_AI_PLAYERS;
+
+
 
     private Label numPlayersLabel;
     private ImageView[] playerImageViews;
-    private Button minusButton;
-    private Button plusButton;
+    private Button minusButtonPlayer;
+    private Button plusButtonPlayer;
+
+    private Label numAIPlayersLabel;
+    private Button minusButtonAIPlayer;
+    private Button plusButtonAIPlayer;
+
+    private ComboBox<String> comboBox;
     public MenuScene() {
         StackPane root = new StackPane();
         Pane PlayerImg = new Pane();
@@ -76,8 +91,11 @@ public class MenuScene extends CustomScene{
         playersLabel.setTextFill(javafx.scene.paint.Color.WHITE);
         playersLabel.setStyle("-fx-font-size: 16px;");
         HBox playersBox = new HBox(10);
+        HBox AIPlayersBox = new HBox(10);
         playersBox.setAlignment(Pos.CENTER);
 
+
+        //Number of players
         this.numPlayersLabel = new Label(Integer.toString(MIN_PLAYERS));
         this.numPlayersLabel.setStyle("-fx-font-size: 16px;");
         this.numPlayersLabel.setTextFill(javafx.scene.paint.Color.WHITE);
@@ -88,11 +106,46 @@ public class MenuScene extends CustomScene{
         Button plusButton = new Button("+");
         plusButton.setOnAction(e -> increasePlayers(numPlayersLabel));
 
-        this.minusButton = minusButton;
-        this.plusButton = plusButton;
+
+        this.minusButtonPlayer = minusButton;
+        this.plusButtonPlayer = plusButton;
 
         playersBox.getChildren().addAll(minusButton, numPlayersLabel, plusButton);
 
+        //Number of AI players
+        Label AIPlayersLabel = new Label("Number of AI Players:");
+        AIPlayersLabel.setTextFill(javafx.scene.paint.Color.WHITE);
+        AIPlayersLabel.setStyle("-fx-font-size: 16px;");
+        AIPlayersBox.setAlignment(Pos.CENTER);
+        Label numAIPlayersLabel = new Label("0");
+        numAIPlayersLabel.setStyle("-fx-font-size: 16px;");
+        numAIPlayersLabel.setTextFill(javafx.scene.paint.Color.WHITE);
+        Button minusAIButton = new Button("-");
+        minusAIButton.setOnAction(e -> decreaseAIPlayers(numAIPlayersLabel));
+
+        Button plusAIButton = new Button("+");
+        plusAIButton.setOnAction(e -> increaseAIPlayers(numAIPlayersLabel));
+
+        this.numAIPlayersLabel = numAIPlayersLabel;
+        this.minusButtonAIPlayer = minusAIButton;
+        this.plusButtonAIPlayer = plusAIButton;
+
+
+        AIPlayersBox.getChildren().addAll(minusAIButton, numAIPlayersLabel, plusAIButton);
+
+        ComboBox<String> comboBox = new ComboBox<>();
+
+        comboBox.getItems().addAll("Easy", "Normal");
+
+        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            // Handle rule change
+            System.out.println("Selected Rule: " + newValue);
+
+        });
+
+        comboBox.setValue("Normal");
+
+        this.comboBox = comboBox;
         Button startButton = new Button("Start Game");
         startButton.setOnAction(e -> {
             try {
@@ -102,7 +155,7 @@ public class MenuScene extends CustomScene{
             }
         });
         PlayerImg.getChildren().addAll(player1ImageView, player2ImageView, player3ImageView, player4ImageView, player5ImageView, player6ImageView);
-        menu.getChildren().addAll(titleImageView, playersLabel, playersBox, startButton);
+        menu.getChildren().addAll(titleImageView, playersLabel, playersBox, AIPlayersLabel, AIPlayersBox, comboBox, startButton);
         root.getChildren().addAll(mediaView,PlayerImg,menu);
         RefreshPlayerDisplay();
         RefreshButtonDisplay();
@@ -112,7 +165,7 @@ public class MenuScene extends CustomScene{
     }
 
     private void decreasePlayers(Label numPlayersLabel) {
-        if (numPlayers > MIN_PLAYERS) {
+        if (numPlayers > MIN_PLAYERS && numPlayers + numAIPlayers > MIN_PLAYERS) {
             numPlayers--;
             numPlayersLabel.setText(Integer.toString(numPlayers));
             RefreshPlayerDisplay();
@@ -120,13 +173,33 @@ public class MenuScene extends CustomScene{
         }
     }
     private void increasePlayers(Label numPlayersLabel) {
-        if (numPlayers < MAX_PLAYERS) {
+        if (numPlayers < MAX_PLAYERS && numPlayers + numAIPlayers < MAX_PLAYERS) {
             numPlayers++;
             numPlayersLabel.setText(Integer.toString(numPlayers));
             RefreshPlayerDisplay();
             RefreshButtonDisplay();
         }
     }
+
+    private void decreaseAIPlayers(Label numAIPlayersLabel) {
+        if (numAIPlayers > MIN_AI_PLAYERS && numPlayers + numAIPlayers > MIN_PLAYERS) {
+            numAIPlayers--;
+            numAIPlayersLabel.setText(Integer.toString(numAIPlayers));
+            RefreshPlayerDisplay();
+            RefreshButtonDisplay();
+        }
+    }
+
+    private void increaseAIPlayers(Label numAIPlayersLabel) {
+        if (numAIPlayers < MAX_AI_PLAYERS && numPlayers + numAIPlayers < MAX_PLAYERS) {
+            numAIPlayers++;
+            numAIPlayersLabel.setText(Integer.toString(numAIPlayers));
+            RefreshPlayerDisplay();
+            RefreshButtonDisplay();
+        }
+    }
+
+
 
     private void RefreshPlayerDisplay(){
         for(int i = 0; i < this.playerImageViews.length; i++){
@@ -140,16 +213,30 @@ public class MenuScene extends CustomScene{
 
     private void RefreshButtonDisplay(){
         if(this.numPlayers == MIN_PLAYERS){
-            this.minusButton.setDisable(true);
+            this.minusButtonPlayer.setDisable(true);
         }else{
-            this.minusButton.setDisable(false);
+            this.minusButtonPlayer.setDisable(false);
         }
 
-        if(this.numPlayers == MAX_PLAYERS){
-            this.plusButton.setDisable(true);
+        if(this.numPlayers == MAX_PLAYERS || this.numPlayers + this.numAIPlayers == MAX_PLAYERS){
+            this.plusButtonPlayer.setDisable(true);
         }else{
-            this.plusButton.setDisable(false);
+            this.plusButtonPlayer.setDisable(false);
         }
+
+        if(this.numAIPlayers == MIN_AI_PLAYERS){
+            this.minusButtonAIPlayer.setDisable(true);
+        }else{
+            this.minusButtonAIPlayer.setDisable(false);
+        }
+
+        if(this.numAIPlayers == MAX_AI_PLAYERS || this.numPlayers + this.numAIPlayers == MAX_PLAYERS){
+            this.plusButtonAIPlayer.setDisable(true);
+        }else{
+            this.plusButtonAIPlayer.setDisable(false);
+        }
+
+
     }
 
     private void startGame() throws Exception {
@@ -163,5 +250,18 @@ public class MenuScene extends CustomScene{
     public  void OnSceneExit(){
         System.out.println("Je sors du menu hello kitty avec la valeur nbplayers : " + this.numPlayersLabel.getText() + "");
         GameManager.instance.nbJoueurs = Integer.valueOf(this.numPlayersLabel.getText());
+        GameManager.instance.nbIA = Integer.valueOf(this.numAIPlayersLabel.getText());
+        SetRule(this.comboBox.getValue());
+    }
+
+    public void SetRule(String rule){
+        switch (rule) {
+            case "Easy":
+                RuleManager.instance.setRule(new ColorAddict.Rules.Easy());
+                break;
+            case "Normal":
+                RuleManager.instance.setRule(new ColorAddict.Rules.Normal());
+                break;
+        }
     }
 }

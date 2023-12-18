@@ -1,17 +1,19 @@
 package ColorAddict.Scenes;
 
 import ColorAddict.*;
-import javafx.event.EventHandler;
+import ColorAddict.AI.AIPlayer;
+import ColorAddict.Players.Player;
+import ColorAddict.Players.PlayerAction;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 import javafx.stage.*;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,14 +38,14 @@ public class GameScene extends CustomScene{
 
     public  void OnSceneEnter() throws Exception {
         System.out.println("Je rentre dans le game");
-            ArrayList<Joueur> joueurs = gameManager.StartGame();
-        BorderPane borderPane = new BorderPane();
+            ArrayList<PlayerAction> joueurs = gameManager.StartGame();
+        HBox borderPane = new HBox();
 
         // Create grid pane which will contain all players
         GridPane grid = new GridPane();
         grid.maxWidth(1450);
         grid.maxHeight(1080);
-        grid.setMinSize(1450, 1080);
+        grid.setMinSize(1250, 1080);
         grid.setHgap(10);
         grid.setVgap(10);
 
@@ -61,16 +63,22 @@ public class GameScene extends CustomScene{
             }
         }
 
-        //grid.setGridLinesVisible(true);
-        borderPane.setLeft(grid);
-        borderPane.setCenter(HeapManager.instance);
+       /* borderPane.setLeft(grid);
+
+
+        borderPane.setRight(HeapManager.instance);*/
+
+        borderPane.getChildren().addAll(grid, HeapManager.instance);
 
         Scene scene = new Scene(borderPane);
+
         this.scene = scene;
 
-        for (Joueur joueur : joueurs) {
-            joueur.AddKeyListening();
-
+        for (PlayerAction joueur : joueurs) {
+            if(joueur instanceof Player)
+                ((Player) joueur).AddKeyListening();
+            if (joueur instanceof AIPlayer)
+                ((AIPlayer) joueur).StartAI();
         }
 
     }
@@ -112,7 +120,7 @@ public class GameScene extends CustomScene{
 
 
     public  void OnSceneExit(){
-        System.out.println("C pas moi qui kite le game c moi le game ki me kitty");
+        System.out.println("C pas le game qui me quitte c'est moi qui quitte le game");
 
 
             //Reset the game

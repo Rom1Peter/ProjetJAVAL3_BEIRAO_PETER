@@ -4,7 +4,10 @@ import javafx.scene.input.KeyCode;
 
 public class PlayerConfig {
 
-    KeyCode keyUp, keyDown, keyLeft, keyRight;
+    public KeyCode keyUp;
+    public KeyCode keyDown;
+    public KeyCode keyLeft;
+    public KeyCode keyRight;
 
     public PlayerConfig( KeyCode keyLeft, KeyCode keyRight, KeyCode keyUp, KeyCode keyDown){
         this.keyUp = keyUp;

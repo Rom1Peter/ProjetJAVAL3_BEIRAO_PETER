@@ -13,13 +13,8 @@ import java.util.ArrayList;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws Exception {
-
-
-
         SceneManager sceneManager = new SceneManager(stage);
         sceneManager.changeScene("MenuScene");
-
-
     }
 
     public static void main(String[] args) {
