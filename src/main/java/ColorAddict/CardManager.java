@@ -125,6 +125,7 @@ public class CardManager {
 
         cards.clear();
 
+
         for (PlayerAction player : players) {
             for (Card card : player.hand) {
                 cards.add(card);
@@ -132,6 +133,8 @@ public class CardManager {
             for (Card card : player.stack) {
                 cards.add(card);
             }
+            player.deleteAllCards();
+
         }
 
         Collections.shuffle(cards);

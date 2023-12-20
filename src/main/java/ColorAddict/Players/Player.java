@@ -18,9 +18,10 @@ public class Player extends PlayerAction{
         SceneManager.instance.getCurrentScene().getScene().addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler(){
             @Override
             public void handle(javafx.event.Event event) {
-                if(isGameOver)
+                if(isGameOver) {
+                    System.out.println("GAME OVER");
                     return;
-
+                }
                 KeyEvent keyEvent = (KeyEvent) event;
 
                 if(keyEvent.getCode() == config.keyLeft){

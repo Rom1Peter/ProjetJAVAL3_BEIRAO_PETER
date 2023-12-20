@@ -217,6 +217,18 @@ public abstract class PlayerAction extends Group {
 
     }
 
+    public void deleteCard(Card card){
+        this.getChildren().remove(cards.get(indexSelectedCard));
+        cards.remove(indexSelectedCard);
+    }
+
+    public void deleteAllCards(){
+        for (Group card : cards) {
+            this.getChildren().remove(card);
+        }
+        cards.clear();
+    }
+
     public int getIndexSelectedCard(){
         return indexSelectedCard;
     }
